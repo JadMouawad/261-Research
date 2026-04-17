@@ -16,11 +16,15 @@ from manim import (
     Circle,
     Create,
     FadeIn,
+    MoveAlongPath,
     Square,
+    VMobject,
+    linear,
     Succession,
     Text,
     VGroup,
 )
+import numpy as np
 
 from ..constants import LAYOUT, PALETTE, TYPOGRAPHY
 
@@ -96,14 +100,50 @@ class GridWorld(VGroup):
         return dot
 
     def path_animation(self, path: list[tuple[int, int]], run_time_per_step: float = 0.38) -> Animation:
-        """Return a sequential animation for agent movement along path cells."""
+        """Return a Manhattan-constrained movement animation for the agent."""
         if self.agent is None:
             raise ValueError("Call spawn_agent before animating a path.")
-        steps = [
-            self.agent.animate.move_to(self.cell_center(row, col)).set_run_time(run_time_per_step)
-            for row, col in path
-        ]
-        return Succession(*steps)
+        step_path = self._expand_to_cardinal_steps(path)
+        if not step_path:
+            return Succession()
+
+        # Build a polyline that includes every intermediate grid step.
+        points = [self.agent.get_center()]
+        for row, col in step_path:
+            p = self.cell_center(row, col)
+            if np.linalg.norm(p - points[-1]) > 1e-6:
+                points.append(p)
+
+        if len(points) < 2:
+            return Succession()
+
+        path_curve = VMobject()
+        path_curve.set_points_as_corners(points)
+        total_time = run_time_per_step * (len(points) - 1)
+        return MoveAlongPath(self.agent, path_curve, rate_func=linear, run_time=total_time)
+
+    @staticmethod
+    def _expand_to_cardinal_steps(path: list[tuple[int, int]]) -> list[tuple[int, int]]:
+        """Expand path so each move changes only one coordinate by 1 cell.
+
+        This prevents accidental diagonal/jump motion in gridworld scenes.
+        """
+        if not path:
+            return path
+
+        expanded = [path[0]]
+        for (r1, c1), (r2, c2) in zip(path, path[1:]):
+            r, c = r1, c1
+
+            # Move row-wise first, then column-wise.
+            while r != r2:
+                r += 1 if r2 > r else -1
+                expanded.append((r, c))
+            while c != c2:
+                c += 1 if c2 > c else -1
+                expanded.append((r, c))
+
+        return expanded
 
     def make_action_arrows(self, row: int, col: int, q_vals: dict[str, float], precision: int = 2) -> VGroup:
         """Draw directional arrows from one state with compact Q-value labels."""

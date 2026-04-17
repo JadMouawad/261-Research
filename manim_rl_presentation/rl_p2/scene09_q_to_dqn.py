@@ -1,9 +1,9 @@
-"""Scene 9: From Q-table to DQN."""
+﻿"""Scene 9: From Q-table to DQN."""
 
 from pathlib import Path
 import sys
 
-from manim import DOWN, LEFT, RIGHT, UP, Arrow, Circle, FadeIn, LaggedStart, Line, Rectangle, ReplacementTransform, Text, VGroup
+from manim import DOWN, LEFT, RIGHT, UP, Arrow, Circle, FadeIn, LaggedStart, Line, Rectangle, RoundedRectangle, Text, VGroup
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -19,16 +19,16 @@ except ImportError:
     from manim_rl_presentation.rl_p2.scene_base import P2BaseScene
 
 
-def build_q_table_mock(rows: int = 7, cols: int = 7) -> VGroup:
+def build_q_table_mock(rows: int = 6, cols: int = 6) -> VGroup:
     """Dense table to visually communicate scaling limitations."""
     table = VGroup()
     for r in range(rows):
         for c in range(cols):
-            cell = Rectangle(width=0.45, height=0.28)
+            cell = Rectangle(width=0.42, height=0.28)
             cell.set_fill("#1C212B", opacity=0.85).set_stroke(PALETTE.text_muted, width=0.6)
-            cell.move_to((c - (cols - 1) / 2) * 0.48 * RIGHT + ((rows - 1) / 2 - r) * 0.31 * UP)
+            cell.move_to((c - (cols - 1) / 2) * 0.45 * RIGHT + ((rows - 1) / 2 - r) * 0.31 * UP)
             table.add(cell)
-    label = Text("Q-table", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary)
+    label = Text("Q-table", font_size=TYPOGRAPHY.body_size, color=PALETTE.text_primary)
     label.next_to(table, UP, buff=0.2)
     return VGroup(table, label)
 
@@ -39,9 +39,9 @@ def build_dqn_block() -> VGroup:
     for x in [-1.2, -0.2, 0.8]:
         col = VGroup()
         for y in [0.9, 0.3, -0.3, -0.9]:
-            n = Circle(radius=0.09).set_fill("#22324A", opacity=1).set_stroke(PALETTE.agent, width=1.2)
-            n.move_to(x * RIGHT + y * UP)
-            col.add(n)
+            node = Circle(radius=0.09).set_fill("#22324A", opacity=1).set_stroke(PALETTE.agent, width=1.2)
+            node.move_to(x * RIGHT + y * UP)
+            col.add(node)
         layers.add(col)
 
     edges = VGroup()
@@ -51,8 +51,8 @@ def build_dqn_block() -> VGroup:
                 edges.add(Line(a.get_center(), b.get_center(), stroke_width=0.6, color=PALETTE.text_muted))
 
     block = VGroup(edges, layers)
-    in_lbl = Text("state", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).next_to(block, LEFT, buff=0.35)
-    out_lbl = Text("Q(s,a)", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).next_to(block, RIGHT, buff=0.35)
+    in_lbl = Text("state", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).next_to(block, LEFT, buff=0.2).shift(UP * 0.55)
+    out_lbl = Text("Q-values", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).next_to(block, RIGHT, buff=0.2).shift(UP * 0.55)
     return VGroup(block, in_lbl, out_lbl)
 
 
@@ -63,24 +63,42 @@ class Scene09QTableToDQN(P2BaseScene):
         header = SceneHeader("9. From Q-learning to DQN", "Same objective, better representation")
         self.play(FadeIn(header))
 
-        q_table = build_q_table_mock().to_edge(LEFT, buff=1.0).shift(DOWN * 0.2)
-        overflow = Text("Does not scale to large state spaces", font_size=TYPOGRAPHY.small_size, color=PALETTE.bad)
-        overflow.next_to(q_table, DOWN, buff=0.25)
-        self.play(FadeIn(q_table))
-        self.play(FadeIn(overflow))
+        # Left: tabular approach
+        q_table = build_q_table_mock().move_to(LEFT * 4.25 + DOWN * 0.2)
+        overflow = Text("Hard to scale to many states", font_size=TYPOGRAPHY.small_size - 2, color=PALETTE.bad)
+        overflow.next_to(q_table, DOWN, buff=0.28)
+        self.play(FadeIn(q_table), FadeIn(overflow), run_time=0.9)
 
-        dqn = build_dqn_block().to_edge(RIGHT, buff=1.1).shift(DOWN * 0.15)
-        arrow = Arrow(q_table.get_right(), dqn.get_left(), buff=0.25, color=PALETTE.accent)
-        arrow_lbl = Text("Use a neural network to estimate Q", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
-        arrow_lbl.next_to(arrow, UP, buff=0.15)
-        compact_table = q_table.copy().scale(0.6).move_to(dqn.get_left() + LEFT * 1.0)
-        self.play(ReplacementTransform(q_table.copy(), compact_table), run_time=0.8)
-        self.play(FadeIn(dqn), FadeIn(arrow), FadeIn(arrow_lbl))
+        # Center: transformation cue
+        bridge = Arrow(
+            start=LEFT * 1.45 + DOWN * 0.05,
+            end=RIGHT * 1.25 + DOWN * 0.05,
+            buff=0,
+            color=PALETTE.accent,
+            stroke_width=5,
+        )
+        bridge_lbl = Text("Q-table  ->  DQN", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
+        bridge_lbl.next_to(bridge, UP, buff=0.14)
+        self.play(FadeIn(bridge), FadeIn(bridge_lbl), run_time=0.7)
 
-        badges = VGroup(
-            Text("Experience Replay", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary),
-            Text("Target Network", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary),
+        # Right: DQN representation
+        dqn = build_dqn_block().move_to(RIGHT * 4.3 + DOWN * 0.05)
+        self.play(FadeIn(dqn), run_time=0.9)
+
+        tips_title = Text("Stability tricks", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
+        tips = VGroup(
+            Text("- Experience Replay", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary),
+            Text("- Target Network", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.16)
-        badges.next_to(dqn, DOWN, buff=0.3).align_to(dqn, LEFT)
-        self.play(LaggedStart(*[FadeIn(b) for b in badges], lag_ratio=0.2))
+
+        tips_panel = RoundedRectangle(width=4.9, height=1.95, corner_radius=0.1)
+        tips_panel.set_fill("#161B22", opacity=0.9).set_stroke(PALETTE.text_muted, width=1.1)
+
+        tips_content = VGroup(tips_title, tips).arrange(DOWN, aligned_edge=LEFT, buff=0.14)
+        tips_content.move_to(tips_panel.get_center()).align_to(tips_panel, LEFT).shift(RIGHT * 0.24)
+
+        tips_group = VGroup(tips_panel, tips_content).next_to(dqn, DOWN, buff=0.25).align_to(dqn, LEFT)
+        self.play(FadeIn(tips_panel), run_time=0.35)
+        self.play(LaggedStart(*[FadeIn(m) for m in tips_content], lag_ratio=0.2))
+
         self.pause_for("long")
