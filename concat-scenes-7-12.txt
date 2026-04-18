@@ -1,0 +1,6 @@
+file 'c:\Users\jijos\Desktop\261-Research\media\videos\scene07_q_learning_intuition\1080p60\Scene07QLearningIntuition.mp4'
+file 'c:\Users\jijos\Desktop\261-Research\media\videos\scene08_q_update\1080p60\Scene08QUpdateProcess.mp4'
+file 'c:\Users\jijos\Desktop\261-Research\media\videos\scene09_q_to_dqn\1080p60\Scene09QTableToDQN.mp4'
+file 'c:\Users\jijos\Desktop\261-Research\media\videos\scene10_application_warehouse\1080p60\Scene10WarehouseApplication.mp4'
+file 'c:\Users\jijos\Desktop\261-Research\media\videos\scene11_strengths_limitations\1080p60\Scene11StrengthsLimitations.mp4'
+file 'c:\Users\jijos\Desktop\261-Research\media\videos\scene12_conclusion_refs\1080p60\Scene12ConclusionReferences.mp4'

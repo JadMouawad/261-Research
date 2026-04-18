@@ -29,6 +29,7 @@ class Scene07QLearningIntuition(P2BaseScene):
     def construct(self):
         header = SceneHeader("7. Q-learning Intuition", "Action quality is learned over time")
         self.play(FadeIn(header))
+        self.wait(2.0)
 
         grid = GridWorld(rows=4, cols=4)
         grid.scale(1.02).shift(RIGHT * 0.75 + DOWN * 0.05)
@@ -48,7 +49,7 @@ class Scene07QLearningIntuition(P2BaseScene):
 
         self.play(grid.intro_animation(), run_time=1.2)
         self.play(grid.markers_animation(), FadeIn(agent), FadeIn(legend), run_time=0.8)
-        self.pause_for("short")
+        self.wait(4.0)
 
         # Show one bad trial and one good trial to demonstrate value learning signal.
         bad_path = [(2, 0), (1, 0), (1, 1), (1, 2)]
@@ -59,12 +60,13 @@ class Scene07QLearningIntuition(P2BaseScene):
         good_label = Text("Better path after learning", font_size=TYPOGRAPHY.small_size, color=PALETTE.goal).move_to(bad_label)
 
         self.play(FadeIn(bad_overlay), FadeIn(bad_label), run_time=0.5)
-        self.play(grid.path_animation(bad_path, run_time_per_step=0.32))
-        self.pause_for("quick")
+        self.play(grid.path_animation(bad_path, run_time_per_step=0.55))
+        self.wait(3.0)
         self.play(agent.animate.move_to(grid.cell_center(3, 0)), FadeOut(bad_overlay), run_time=0.45)
         self.play(FadeIn(good_overlay), bad_label.animate.become(good_label), run_time=0.45)
-        self.play(grid.path_animation(good_path, run_time_per_step=0.27))
-        self.pause_for("short")
+        self.wait(1.5)
+        self.play(grid.path_animation(good_path, run_time_per_step=0.50))
+        self.wait(4.0)
 
         # Action arrows around one state with improving Q-values.
         q_vals_early = {"U": 0.1, "R": 0.2, "D": -0.1, "L": 0.0}
@@ -84,11 +86,12 @@ class Scene07QLearningIntuition(P2BaseScene):
             FadeIn(caption),
             run_time=0.7,
         )
-        self.pause_for("short")
+        self.wait(4.0)
         self.play(ReplacementTransform(arrows_early, arrows_late), run_time=0.9)
+        self.wait(2.5)
         self.play(Indicate(arrows_late[2], color=PALETTE.goal), run_time=0.8)
 
         takeaway = Text("Policy: usually choose the highest Q-value", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
         takeaway.next_to(grid, DOWN, buff=0.35)
         self.play(FadeIn(takeaway))
-        self.pause_for("long")
+        self.wait(6.5)

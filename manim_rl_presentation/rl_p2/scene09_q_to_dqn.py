@@ -62,12 +62,14 @@ class Scene09QTableToDQN(P2BaseScene):
     def construct(self):
         header = SceneHeader("9. From Q-learning to DQN", "Same objective, better representation")
         self.play(FadeIn(header))
+        self.wait(2.0)
 
         # Left: tabular approach
         q_table = build_q_table_mock().move_to(LEFT * 4.25 + DOWN * 0.2)
         overflow = Text("Hard to scale to many states", font_size=TYPOGRAPHY.small_size - 2, color=PALETTE.bad)
         overflow.next_to(q_table, DOWN, buff=0.28)
         self.play(FadeIn(q_table), FadeIn(overflow), run_time=0.9)
+        self.wait(5.0)
 
         # Center: transformation cue
         bridge = Arrow(
@@ -80,10 +82,12 @@ class Scene09QTableToDQN(P2BaseScene):
         bridge_lbl = Text("Q-table  ->  DQN", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
         bridge_lbl.next_to(bridge, UP, buff=0.14)
         self.play(FadeIn(bridge), FadeIn(bridge_lbl), run_time=0.7)
+        self.wait(6.0)
 
         # Right: DQN representation
         dqn = build_dqn_block().move_to(RIGHT * 4.3 + DOWN * 0.05)
         self.play(FadeIn(dqn), run_time=0.9)
+        self.wait(6.0)
 
         tips_title = Text("Stability tricks", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
         tips = VGroup(
@@ -100,5 +104,6 @@ class Scene09QTableToDQN(P2BaseScene):
         tips_group = VGroup(tips_panel, tips_content).next_to(dqn, DOWN, buff=0.25).align_to(dqn, LEFT)
         self.play(FadeIn(tips_panel), run_time=0.35)
         self.play(LaggedStart(*[FadeIn(m) for m in tips_content], lag_ratio=0.2))
+        self.wait(10.0)
 
-        self.pause_for("long")
+        self.wait(10.0)

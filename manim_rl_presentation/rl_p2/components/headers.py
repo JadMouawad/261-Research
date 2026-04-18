@@ -12,7 +12,13 @@ class SceneHeader(VGroup):
         super().__init__()
         title_text = Text(title, color=PALETTE.text_primary, font_size=TYPOGRAPHY.title_size, weight="BOLD")
         title_text.to_edge(LEFT, buff=0.65).to_edge(UP, buff=0.35)
-        line = Line(title_text.get_left() + DOWN * 0.22, title_text.get_right() + DOWN * 0.22, color=PALETTE.text_muted)
+        # Place separator slightly below glyph descenders so it never strikes through text.
+        y = title_text.get_bottom()[1] - 0.06
+        line = Line(
+            [title_text.get_left()[0], y, 0],
+            [title_text.get_right()[0], y, 0],
+            color=PALETTE.text_muted,
+        )
         self.add(title_text, line)
         if subtitle:
             subtitle_text = Text(subtitle, color=PALETTE.text_muted, font_size=TYPOGRAPHY.small_size)

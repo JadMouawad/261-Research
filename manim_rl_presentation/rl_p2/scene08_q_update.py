@@ -27,6 +27,7 @@ class Scene08QUpdateProcess(P2BaseScene):
     def construct(self):
         header = SceneHeader("8. How Q-learning Updates Knowledge")
         self.play(FadeIn(header))
+        self.wait(2.0)
 
         grid = GridWorld(rows=4, cols=4).scale(0.8).to_edge(LEFT, buff=0.95).shift(DOWN * 0.25)
         grid.mark_start(3, 0)
@@ -38,6 +39,7 @@ class Scene08QUpdateProcess(P2BaseScene):
         # Exact same reveal pattern as Scene 7.
         self.play(grid.intro_animation(), run_time=1.0)
         self.play(grid.markers_animation(), FadeIn(agent), run_time=0.8)
+        self.wait(3.0)
 
         eq_panel = RoundedRectangle(width=8.6, height=3.0, corner_radius=0.12).set_fill("#161B22", opacity=0.92)
         eq_panel.set_stroke(PALETTE.text_muted, width=1.2).to_edge(RIGHT, buff=0.45).shift(UP * 0.45)
@@ -49,12 +51,13 @@ class Scene08QUpdateProcess(P2BaseScene):
         hint = Text("new = old + correction", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
         hint.next_to(eq, DOWN, buff=0.24)
         self.play(FadeIn(eq_panel), FadeIn(eq), FadeIn(hint))
-        self.pause_for("short")
+        self.wait(8.0)
 
         # Single transition demonstration.
         trans = Text("One step: (s, a, r, s')", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary)
         trans.next_to(eq_panel, DOWN, buff=0.35).align_to(eq_panel, LEFT)
         self.play(FadeIn(trans))
+        self.wait(4.0)
 
         # One explicit transition: source state -> next state.
         src_cell = grid.cells[(3, 0)].copy().set_fill(PALETTE.accent, opacity=0.22).set_stroke(PALETTE.accent, width=2)
@@ -67,16 +70,16 @@ class Scene08QUpdateProcess(P2BaseScene):
             stroke_width=4,
         )
         self.play(FadeIn(src_cell), FadeIn(dst_cell), FadeIn(step_arrow), run_time=0.5)
-        self.pause_for("short")
-        self.play(grid.path_animation([(2, 0)], run_time_per_step=0.8))
-        self.pause_for("short")
+        self.wait(3.0)
+        self.play(grid.path_animation([(2, 0)], run_time_per_step=1.2))
+        self.wait(3.0)
         self.play(FadeOut(src_cell), FadeOut(dst_cell), FadeOut(step_arrow), run_time=0.3)
         before = Text("Q old = 0.30", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_muted).next_to(trans, DOWN, aligned_edge=LEFT)
         after = Text("Q new = 0.42", font_size=TYPOGRAPHY.small_size, color=PALETTE.goal).next_to(before, DOWN, aligned_edge=LEFT)
         self.play(FadeIn(before))
-        self.pause_for("beat")
+        self.wait(3.0)
         self.play(FadeIn(after))
-        self.pause_for("short")
+        self.wait(3.0)
 
         params = VGroup(
             Text("alpha controls update size", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary),
@@ -84,4 +87,4 @@ class Scene08QUpdateProcess(P2BaseScene):
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
         params.next_to(after, DOWN, aligned_edge=LEFT, buff=0.24)
         self.play(FadeIn(params))
-        self.pause_for("long")
+        self.wait(12.0)
