@@ -4,7 +4,12 @@ __pycache__/
 *$py.class
 
 # Manim (generated renders/caches)
-media/
+# Keep final rendered videos in git, ignore all other media caches/artifacts.
+media/*
+!media/videos/
+!media/videos/**/
+media/videos/**/*
+!media/videos/**/*.mp4
 .manim/
 
 # assistant artifacts
