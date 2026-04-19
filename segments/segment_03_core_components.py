@@ -1,9 +1,12 @@
 from manim import *
+from p1_style import P1_BACKGROUND, animate_title_block, make_title_block
 
 
 class Segment3CoreComponents(Scene):
     def construct(self):
-        title = Text("Core Components", font_size=56, color=WHITE).to_edge(UP, buff=0.4)
+        self.camera.background_color = P1_BACKGROUND
+        title_block = make_title_block("Core Components", 56, "State, action, reward, and loop dynamics")
+        title, _, _ = title_block
 
         state_1 = LEFT * 4.1 + DOWN * 0.8
         state_2 = LEFT * 3.3 + UP * 0.2
@@ -106,7 +109,7 @@ class Segment3CoreComponents(Scene):
         reward_text = Text("+1", font_size=42, color=GREEN_B).move_to(env_panel.get_center() + UP * 0.85 + RIGHT * 0.95)
         penalty_text = Text("-2", font_size=42, color=RED_B).move_to(env_panel.get_center() + DOWN * 0.85 + RIGHT * 0.95)
 
-        self.play(Write(title), run_time=2.0)
+        animate_title_block(self, title_block, run_time=2.0)
 
         self.play(FadeIn(agent), FadeIn(env_panel), FadeIn(env_core), run_time=2.0)
         self.play(env_core.animate.scale(1.13), rate_func=there_and_back, run_time=2.0)

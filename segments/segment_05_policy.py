@@ -1,9 +1,12 @@
 from manim import *
+from p1_style import P1_BACKGROUND, animate_title_block, make_title_block
 
 
 class Segment5Policy(Scene):
     def construct(self):
-        title = Text("Policy", font_size=58, color=WHITE).to_edge(UP, buff=0.4)
+        self.camera.background_color = P1_BACKGROUND
+        title_block = make_title_block("Policy", 58, "From many choices to one preferred action")
+        title, title_rule, subtitle = title_block
 
         state_pos = LEFT * 2.8 + DOWN * 0.2
         good_end = RIGHT * 3.0 + UP * 1.1
@@ -66,7 +69,7 @@ class Segment5Policy(Scene):
         arrows = VGroup(arrow_good, arrow_alt_1, arrow_alt_2, arrow_alt_3)
         endpoints = VGroup(end_good, end_alt_1, end_alt_2, end_alt_3)
 
-        self.play(Write(title), run_time=2.0)
+        animate_title_block(self, title_block, run_time=2.0)
 
         self.play(FadeIn(agent), FadeIn(state_ring), run_time=1.4)
         self.play(FadeIn(arrows), FadeIn(endpoints), run_time=1.8)
@@ -199,6 +202,8 @@ class Segment5Policy(Scene):
             FadeOut(
                 VGroup(
                     title,
+                    title_rule,
+                    subtitle,
                     agent,
                     state_ring,
                     arrows,
