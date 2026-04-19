@@ -1,9 +1,12 @@
 from manim import *
+from p1_style import P1_BACKGROUND, animate_title_block, make_title_block
 
 
 class Segment4InteractionLoop(Scene):
     def construct(self):
-        title = Text("Interaction Loop", font_size=56, color=WHITE).to_edge(UP, buff=0.4)
+        self.camera.background_color = P1_BACKGROUND
+        title_block = make_title_block("Interaction Loop", 56, "Continuous cycle of action, feedback, and adaptation")
+        title, _, _ = title_block
 
         loop_path = Ellipse(width=8.0, height=4.8, color=GRAY_C, stroke_width=5).move_to(DOWN * 0.15)
         improved_loop = Ellipse(width=7.2, height=4.3, color=GRAY_C, stroke_width=5).move_to(DOWN * 0.15)
@@ -62,7 +65,7 @@ class Segment4InteractionLoop(Scene):
         decision_a.add_updater(lambda m: m.move_to(loop_path.point_from_proportion(0.62)))
         decision_b.add_updater(lambda m: m.move_to(loop_path.point_from_proportion(0.70)))
 
-        self.play(Write(title), run_time=1.1)
+        animate_title_block(self, title_block, run_time=1.1)
         self.play(Create(loop_path), run_time=0.9)
         self.play(FadeIn(env_panel), FadeIn(env_core), FadeIn(agent), run_time=0.7)
 

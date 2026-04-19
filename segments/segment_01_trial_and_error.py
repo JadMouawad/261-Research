@@ -1,9 +1,12 @@
 from manim import *
+from p1_style import P1_BACKGROUND, animate_title_block, make_title_block
 
 
 class Segment1TrialAndError(Scene):
     def construct(self):
-        title = Text("Trial and Error", font_size=60, color=WHITE).to_edge(UP, buff=0.45)
+        self.camera.background_color = P1_BACKGROUND
+        title_block = make_title_block("Trial and Error", 60, "Learning by feedback and repeated attempts")
+        title, title_rule, subtitle = title_block
 
         start = LEFT * 1.4 + DOWN * 2.0
         bad_end = RIGHT * 3.7 + DOWN * 1.6
@@ -50,7 +53,7 @@ class Segment1TrialAndError(Scene):
 
         self.add(platform)
 
-        self.play(Write(title), run_time=2.0)
+        animate_title_block(self, title_block, run_time=2.0)
 
         self.play(title.animate.scale(1.04), run_time=1.5)
         self.play(title.animate.scale(1 / 1.04), run_time=1.5)
@@ -116,6 +119,8 @@ class Segment1TrialAndError(Scene):
             FadeOut(
                 VGroup(
                     title,
+                    title_rule,
+                    subtitle,
                     platform,
                     path_group,
                     agent,

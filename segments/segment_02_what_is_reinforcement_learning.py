@@ -1,9 +1,12 @@
 from manim import *
+from p1_style import P1_BACKGROUND, animate_title_block, make_title_block
 
 
 class Segment2WhatIsReinforcementLearning(Scene):
     def construct(self):
-        title = Text("What Is Reinforcement Learning?", font_size=54, color=WHITE).to_edge(UP, buff=0.4)
+        self.camera.background_color = P1_BACKGROUND
+        title_block = make_title_block("What Is Reinforcement Learning?", 54, "Agent acts, environment responds, reward guides learning")
+        title, _, _ = title_block
 
         agent_center = LEFT * 4.2 + DOWN * 0.9
         agent = Dot(point=agent_center, radius=0.15, color=BLUE)
@@ -108,7 +111,7 @@ class Segment2WhatIsReinforcementLearning(Scene):
         small_reward_text = Text("+1", font_size=34, color=GREEN_A).move_to(env_panel.get_right() + LEFT * 0.8 + UP * 0.45)
         big_reward_text = Text("+1", font_size=52, color=GREEN_C).move_to(env_panel.get_right() + LEFT * 0.72 + UP * 0.82)
 
-        self.play(Write(title), run_time=2.0)
+        animate_title_block(self, title_block, run_time=2.0)
 
         self.play(FadeIn(agent), FadeIn(env_panel), FadeIn(env_core), run_time=2.0)
         self.play(env_core.animate.scale(1.14), rate_func=there_and_back, run_time=2.0)
