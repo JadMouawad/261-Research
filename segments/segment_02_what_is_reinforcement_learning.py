@@ -91,8 +91,9 @@ class Segment2WhatIsReinforcementLearning(Scene):
         ).set_opacity(0)
 
         counter_label = Text("Total Reward:", font_size=30, color=WHITE).to_corner(UR, buff=0.55)
-        counter_number = Integer(0, mob_class=Text, font_size=34, color=GREEN_B).next_to(counter_label, RIGHT, buff=0.16)
+        counter_number = Integer(0, font_size=34, color=GREEN_B, mob_class=Text).next_to(counter_label, RIGHT, buff=0.16)
         reward_counter = VGroup(counter_label, counter_number).set_opacity(0)
+        current_reward = 0
 
         action_signal = Dot(radius=0.07, color=BLUE_B).move_to(action_path.get_start())
         reward_token = Dot(radius=0.09, color=GREEN_B).move_to(feedback_path.point_from_proportion(0))
@@ -102,10 +103,10 @@ class Segment2WhatIsReinforcementLearning(Scene):
         green_action_signal = Dot(radius=0.08, color=GREEN_B).move_to(good_action_path.point_from_proportion(0))
         red_action_signal = Dot(radius=0.08, color=RED_B).move_to(bad_action_path.point_from_proportion(0))
 
-        reward_text = Text("+2", font_size=44, color=GREEN_B).move_to(env_panel.get_right() + LEFT * 0.75 + UP * 0.7)
-        penalty_text = Text("-1", font_size=44, color=RED_B).move_to(env_panel.get_right() + LEFT * 0.75 + DOWN * 0.7)
+        reward_text = Text("+1", font_size=44, color=GREEN_B).move_to(env_panel.get_right() + LEFT * 0.75 + UP * 0.7)
+        penalty_text = Text("-2", font_size=44, color=RED_B).move_to(env_panel.get_right() + LEFT * 0.75 + DOWN * 0.7)
         small_reward_text = Text("+1", font_size=34, color=GREEN_A).move_to(env_panel.get_right() + LEFT * 0.8 + UP * 0.45)
-        big_reward_text = Text("+3", font_size=52, color=GREEN_C).move_to(env_panel.get_right() + LEFT * 0.72 + UP * 0.82)
+        big_reward_text = Text("+1", font_size=52, color=GREEN_C).move_to(env_panel.get_right() + LEFT * 0.72 + UP * 0.82)
 
         self.play(Write(title), run_time=2.0)
 
@@ -119,50 +120,79 @@ class Segment2WhatIsReinforcementLearning(Scene):
 
         self.play(Create(feedback_arrow), run_time=0.9)
         self.play(FadeIn(reward_text), run_time=0.7)
+        reward_token.move_to(feedback_path.point_from_proportion(0))
         self.play(
             FadeIn(reward_token),
             MoveAlongPath(reward_token, feedback_path),
             env_core.animate.set_color(GREEN_B),
-            run_time=1.8,
+            run_time=1.5,
         )
+        self.play(FadeIn(reward_counter), run_time=1.0)
+        current_reward += 1
+        counter_number.set_value(current_reward)
+        self.wait(0.3)
         self.play(FadeOut(reward_text), FadeOut(reward_token), env_core.animate.set_color(BLUE_D), run_time=0.6)
 
         self.play(FadeIn(penalty_text), env_core.animate.set_color(RED_B), run_time=0.8)
+        penalty_token.move_to(feedback_path.point_from_proportion(0))
         self.play(FadeIn(penalty_token), MoveAlongPath(penalty_token, feedback_path), run_time=1.8)
-        self.play(FadeOut(penalty_text), FadeOut(penalty_token), run_time=0.8)
+        self.play(FadeOut(penalty_text), FadeOut(penalty_token), run_time=0.5)
+        current_reward -= 2
+        counter_number.set_value(current_reward)
+        self.wait(0.3)
         self.play(env_core.animate.set_color(BLUE_D), run_time=0.6)
 
         self.play(agent.animate.shift(UP * 0.28), run_time=0.8)
+        action_signal.move_to(action_path_alt.point_from_proportion(0))
         self.play(FadeIn(action_signal), MoveAlongPath(action_signal, action_path_alt), run_time=2.0)
         self.play(FadeOut(action_signal), env_core.animate.scale(1.1).set_color(TEAL_B), run_time=0.7)
         self.play(agent.animate.shift(DOWN * 0.28), env_core.animate.scale(1 / 1.1).set_color(BLUE_D), run_time=0.5)
 
         self.play(FadeIn(small_reward_text), run_time=0.7)
+        small_token.move_to(feedback_path.point_from_proportion(0))
         self.play(
             FadeIn(small_token),
             MoveAlongPath(small_token, feedback_path),
             env_core.animate.set_color(GREEN_A),
             run_time=1.5,
         )
-        self.play(FadeOut(small_reward_text), FadeOut(small_token), env_core.animate.set_color(BLUE_D), run_time=0.9)
+        self.play(
+            FadeOut(small_reward_text),
+            FadeOut(small_token),
+            env_core.animate.set_color(BLUE_D),
+            run_time=0.6,
+        )
+        current_reward += 1
+        counter_number.set_value(current_reward)
+        self.wait(0.3)
         self.play(agent.animate.scale(1.06), rate_func=there_and_back, run_time=0.9)
 
         self.play(FadeIn(big_reward_text), run_time=0.7)
+        big_token.move_to(feedback_path.point_from_proportion(0))
         self.play(
             FadeIn(big_token),
             MoveAlongPath(big_token, feedback_path),
             env_core.animate.set_color(GREEN_B),
             run_time=1.7,
         )
-        self.play(FadeOut(big_reward_text), FadeOut(big_token), env_core.animate.set_color(BLUE_D), run_time=0.8)
+        self.play(
+            FadeOut(big_reward_text),
+            FadeOut(big_token),
+            env_core.animate.set_color(BLUE_D),
+            run_time=0.5,
+        )
+        current_reward += 1
+        counter_number.set_value(current_reward)
+        self.wait(0.3)
         self.play(agent.animate.scale(1.12), rate_func=there_and_back, run_time=0.8)
 
-        self.play(FadeIn(reward_counter), run_time=1.0)
-        self.play(counter_number.animate.set_value(1), run_time=1.2)
-        self.play(counter_number.animate.set_value(4), run_time=1.2)
+        self.wait(1.0)
+        self.wait(1.2)
+        self.wait(1.2)
         self.play(action_arrow.animate.set_stroke(color=GREEN_D, width=5), run_time=0.6)
 
         self.play(Transform(action_arrow, good_arrow), FadeIn(bad_arrow), run_time=1.5)
+        red_action_signal.move_to(bad_action_path.point_from_proportion(0))
         self.play(
             FadeIn(red_action_signal),
             MoveAlongPath(red_action_signal, bad_action_path),
@@ -170,22 +200,26 @@ class Segment2WhatIsReinforcementLearning(Scene):
             run_time=1.2,
         )
         self.play(FadeOut(red_action_signal), env_core.animate.set_color(BLUE_D), run_time=0.3)
+        green_action_signal.move_to(good_action_path.point_from_proportion(0))
         self.play(
             FadeIn(green_action_signal),
             MoveAlongPath(green_action_signal, good_action_path),
             env_core.animate.set_color(GREEN_B),
             run_time=1.5,
         )
+        green_action_signal.move_to(good_action_path.point_from_proportion(0))
         self.play(
             MoveAlongPath(green_action_signal, good_action_path),
-            counter_number.animate.set_value(5),
-            run_time=1.2,
+            run_time=1.0,
         )
+        self.wait(0.2)
         self.play(FadeOut(green_action_signal), env_core.animate.set_color(BLUE_D), run_time=0.3)
 
         self.play(bad_arrow.animate.set_stroke(opacity=0.12, width=2), run_time=1.8)
+        red_action_signal.move_to(bad_action_path.point_from_proportion(0))
         self.play(FadeIn(red_action_signal), MoveAlongPath(red_action_signal, bad_action_path), run_time=1.1)
         self.play(FadeOut(red_action_signal), run_time=0.4)
+        green_action_signal.move_to(good_action_path.point_from_proportion(0))
         self.play(
             FadeIn(green_action_signal),
             MoveAlongPath(green_action_signal, good_action_path),
@@ -199,19 +233,23 @@ class Segment2WhatIsReinforcementLearning(Scene):
             feedback_arrow.animate.set_stroke(color=GREEN_B, width=5, opacity=0.9),
             run_time=0.9,
         )
+        green_action_signal.move_to(good_action_path.point_from_proportion(0))
         self.play(
             FadeIn(green_action_signal),
             MoveAlongPath(green_action_signal, good_action_path),
             env_core.animate.set_color(GREEN_B),
             run_time=1.0,
         )
+        reward_token.move_to(feedback_path.point_from_proportion(0))
         self.play(
             FadeOut(green_action_signal),
             FadeIn(reward_token),
             MoveAlongPath(reward_token, feedback_path),
-            counter_number.animate.set_value(6),
-            run_time=1.2,
+            run_time=1.0,
         )
+        current_reward += 1
+        counter_number.set_value(current_reward)
+        self.wait(0.2)
         self.play(
             FadeOut(reward_token),
             env_core.animate.set_color(BLUE_D),
@@ -219,9 +257,4 @@ class Segment2WhatIsReinforcementLearning(Scene):
             rate_func=there_and_back,
             run_time=0.7,
         )
-        self.play(
-            env_core.animate.scale(1.05).set_color(GREEN_E),
-            agent.animate.scale(1.04),
-            rate_func=there_and_back,
-            run_time=1.2,
-        )
+        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=1.2)

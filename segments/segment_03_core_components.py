@@ -104,7 +104,7 @@ class Segment3CoreComponents(Scene):
         loop_signal = Dot(radius=0.07, color=BLUE_C).move_to(self_loop.get_start())
 
         reward_text = Text("+1", font_size=42, color=GREEN_B).move_to(env_panel.get_center() + UP * 0.85 + RIGHT * 0.95)
-        penalty_text = Text("-1", font_size=42, color=RED_B).move_to(env_panel.get_center() + DOWN * 0.85 + RIGHT * 0.95)
+        penalty_text = Text("-2", font_size=42, color=RED_B).move_to(env_panel.get_center() + DOWN * 0.85 + RIGHT * 0.95)
 
         self.play(Write(title), run_time=2.0)
 
@@ -128,6 +128,7 @@ class Segment3CoreComponents(Scene):
             run_time=1.5,
         )
         tag = action_tag
+        action_signal.move_to(bad_action_path_1.point_from_proportion(0))
         self.play(FadeIn(action_signal), MoveAlongPath(action_signal, bad_action_path_1), run_time=1.2)
         self.play(
             FadeOut(action_signal),
@@ -140,6 +141,7 @@ class Segment3CoreComponents(Scene):
         self.play(ReplacementTransform(tag, reward_tag), run_time=0.8)
         tag = reward_tag
         self.play(FadeIn(feedback_arrow), run_time=0.8)
+        feedback_signal.move_to(feedback_path_1.point_from_proportion(0))
         self.play(
             FadeIn(reward_text),
             FadeIn(feedback_signal),
@@ -174,12 +176,14 @@ class Segment3CoreComponents(Scene):
             Transform(feedback_arrow, feedback_arrow_new),
             run_time=1.2,
         )
+        loop_signal.move_to(self_loop.get_start())
         self.play(
             FadeIn(loop_signal),
             MoveAlongPath(loop_signal, self_loop),
             run_time=1.2,
         )
 
+        action_signal.move_to(good_action_path_2.point_from_proportion(0))
         self.play(
             FadeOut(loop_signal),
             FadeIn(action_signal),
@@ -187,6 +191,8 @@ class Segment3CoreComponents(Scene):
             env_core.animate.set_color(BLUE_E),
             run_time=1.8,
         )
+        feedback_signal.move_to(feedback_path_2.point_from_proportion(0))
+        loop_signal.move_to(self_loop.get_start())
         self.play(
             FadeOut(action_signal),
             FadeIn(feedback_signal),
@@ -206,12 +212,15 @@ class Segment3CoreComponents(Scene):
             FadeIn(penalty_text),
             run_time=1.2,
         )
+        red_signal.move_to(bad_action_path_2.point_from_proportion(0))
         self.play(
             FadeIn(red_signal),
             MoveAlongPath(red_signal, bad_action_path_2),
             env_core.animate.set_color(RED_D),
             run_time=2.0,
         )
+        action_signal.move_to(good_action_path_2.point_from_proportion(0))
+        feedback_signal.move_to(feedback_path_2.point_from_proportion(0))
         self.play(
             FadeOut(red_signal),
             FadeOut(penalty_text),
@@ -234,6 +243,7 @@ class Segment3CoreComponents(Scene):
             feedback_arrow.animate.set_stroke(color=GREEN_B, width=5, opacity=0.95),
             run_time=1.5,
         )
+        action_signal.move_to(good_action_path_2.point_from_proportion(0))
         self.play(
             FadeIn(action_signal),
             MoveAlongPath(action_signal, good_action_path_2),
@@ -241,6 +251,8 @@ class Segment3CoreComponents(Scene):
             env_core.animate.set_color(GREEN_B),
             run_time=2.2,
         )
+        feedback_signal.move_to(feedback_path_2.point_from_proportion(0))
+        loop_signal.move_to(self_loop.get_start())
         self.play(
             FadeOut(action_signal),
             FadeIn(feedback_signal),
@@ -254,6 +266,8 @@ class Segment3CoreComponents(Scene):
             bad_action.animate.set_stroke(opacity=0.15, width=2),
             run_time=2.0,
         )
+        action_signal.move_to(good_action_path_2.point_from_proportion(0))
+        feedback_signal.move_to(feedback_path_2.point_from_proportion(0))
         self.play(
             FadeOut(feedback_signal),
             FadeIn(action_signal),
@@ -262,6 +276,7 @@ class Segment3CoreComponents(Scene):
             MoveAlongPath(feedback_signal, feedback_path_2),
             run_time=2.0,
         )
+        loop_signal.move_to(self_loop.get_start())
         self.play(
             FadeOut(action_signal),
             MoveAlongPath(loop_signal, self_loop),
@@ -270,6 +285,7 @@ class Segment3CoreComponents(Scene):
             run_time=2.0,
         )
 
+        action_signal.move_to(good_action_path_2.point_from_proportion(0))
         self.play(
             FadeIn(action_signal),
             MoveAlongPath(action_signal, good_action_path_2),
@@ -277,6 +293,8 @@ class Segment3CoreComponents(Scene):
             env_core.animate.set_color(GREEN_B),
             run_time=2.8,
         )
+        feedback_signal.move_to(feedback_path_2.point_from_proportion(0))
+        loop_signal.move_to(self_loop.get_start())
         self.play(
             FadeOut(action_signal),
             FadeIn(feedback_signal),
@@ -284,6 +302,7 @@ class Segment3CoreComponents(Scene):
             MoveAlongPath(loop_signal, self_loop),
             run_time=2.8,
         )
+        action_signal.move_to(good_action_path_2.point_from_proportion(0))
         self.play(
             FadeOut(feedback_signal),
             FadeIn(action_signal),
@@ -291,11 +310,4 @@ class Segment3CoreComponents(Scene):
             env_core.animate.set_color(BLUE_D),
             run_time=2.8,
         )
-        self.play(
-            FadeOut(action_signal),
-            env_core.animate.scale(1.05),
-            state_ring.animate.set_opacity(0.55),
-            rate_func=there_and_back,
-            run_time=0.8,
-        )
-        self.wait(0.8)
+        self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=1.6)

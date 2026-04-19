@@ -197,8 +197,20 @@ class Segment4InteractionLoop(Scene):
             run_time=1.3,
         )
         self.play(
-            decision_a.animate.set_opacity(0.95),
-            decision_b.animate.set_opacity(0.75),
-            state_ring.animate.set_opacity(0.45),
+            FadeOut(
+                VGroup(
+                    title,
+                    loop_path,
+                    env_panel,
+                    env_core,
+                    agent,
+                    state_ring,
+                    reward_token,
+                    reward_text,
+                    decision_a,
+                    decision_b,
+                    action_pointer,
+                )
+            ),
             run_time=0.8,
         )
