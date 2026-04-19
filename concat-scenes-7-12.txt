@@ -1,0 +1,6 @@
+file 'media/videos/main/1080p60/Scene07QLearningIntuition.mp4'
+file 'media/videos/main/1080p60/Scene08QUpdateProcess.mp4'
+file 'media/videos/main/1080p60/Scene09QTableToDQN.mp4'
+file 'media/videos/main/1080p60/Scene10WarehouseApplication.mp4'
+file 'media/videos/main/1080p60/Scene11StrengthsLimitations.mp4'
+file 'media/videos/main/1080p60/Scene12ConclusionReferences.mp4'
