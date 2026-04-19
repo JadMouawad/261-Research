@@ -1,4 +1,4 @@
-from manim import AddTextLetterByLetter, AnimationGroup, Create, DOWN, LEFT, Line, Text, UP, VGroup, WHITE
+from manim import AddTextLetterByLetter, AnimationGroup, Create, DOWN, LEFT, Line, Text, UL, VGroup, WHITE
 
 P1_BACKGROUND = "#0D1117"
 P1_TEXT = WHITE
@@ -7,7 +7,7 @@ P1_ACCENT = "#E4B15A"
 
 
 def make_title_block(title: str, title_size: int, subtitle: str) -> VGroup:
-    title_text = Text(title, font_size=title_size, color=P1_TEXT).to_edge(UP, buff=0.4)
+    title_text = Text(title, font_size=title_size, color=P1_TEXT).to_corner(UL, buff=0.5)
     underline = Line(title_text.get_left(), title_text.get_right(), stroke_color=P1_TEXT, stroke_width=3).next_to(
         title_text, DOWN, buff=0.08
     )
