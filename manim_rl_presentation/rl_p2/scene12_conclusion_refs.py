@@ -3,7 +3,7 @@
 from pathlib import Path
 import sys
 
-from manim import DOWN, LEFT, RIGHT, UP, FadeIn, FadeOut, Indicate, LaggedStart, RoundedRectangle, Text, VGroup
+from manim import DOWN, LEFT, RIGHT, UP, FadeIn, FadeOut, LaggedStart, RoundedRectangle, Text, VGroup
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -54,17 +54,19 @@ class Scene12ConclusionReferences(P2BaseScene):
         for card in cards:
             self.play(FadeIn(card), run_time=0.45)
             self.wait(0.35)
-        self.play(Indicate(cards[0], color=PALETTE.accent), run_time=0.6)
-        self.play(Indicate(cards[4], color=PALETTE.goal), run_time=0.6)
-        self.play(Indicate(cards[5], color=PALETTE.accent), run_time=0.6)
+        self.wait(1.8)
         self.wait(6.5)
 
         takeaway_lines = VGroup(
             Text("Final takeaway", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent, weight="BOLD"),
-            Text("Reinforcement Learning improves decisions from feedback over time.", font_size=TYPOGRAPHY.small_size - 2, color=PALETTE.text_primary),
-            Text("Q-learning is the core idea; DQN makes it scale.", font_size=TYPOGRAPHY.small_size - 2, color=PALETTE.text_primary),
+            Text(
+                "Reinforcement Learning improves decisions\nfrom feedback over time.",
+                font_size=TYPOGRAPHY.small_size - 4,
+                color=PALETTE.text_primary,
+            ),
+            Text("Q-learning is the core idea; DQN makes it scale.", font_size=TYPOGRAPHY.small_size - 4, color=PALETTE.text_primary),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.14)
-        takeaway_panel = RoundedRectangle(width=7.25, height=2.05, corner_radius=0.12)
+        takeaway_panel = RoundedRectangle(width=7.5, height=2.2, corner_radius=0.12)
         takeaway_panel.set_fill("#161B22", opacity=0.92).set_stroke(PALETTE.text_muted, width=1.1)
         takeaway_lines.move_to(takeaway_panel.get_center()).align_to(takeaway_panel, LEFT).shift(RIGHT * 0.25)
         takeaway = VGroup(takeaway_panel, takeaway_lines)
@@ -92,8 +94,7 @@ class Scene12ConclusionReferences(P2BaseScene):
         ref_rows = refs[1][1]
         for row in ref_rows:
             self.play(FadeIn(row), run_time=0.32)
-        self.play(Indicate(ref_rows[0], color=PALETTE.accent), run_time=0.6)
-        self.play(Indicate(ref_rows[1], color=PALETTE.accent), run_time=0.6)
+        self.wait(1.2)
         self.wait(9.0)
 
         closing = Text("Thank you.", font_size=TYPOGRAPHY.subtitle_size, color=PALETTE.accent, weight="BOLD").to_edge(DOWN, buff=0.25)
