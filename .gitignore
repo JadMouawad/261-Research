@@ -3,6 +3,12 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Project-specific generated/temporary folders
+aside/
+segments/media/
+manim_rl_presentation/media/
+deliverables/temp/
+
 # Manim (generated renders/caches)
 # Keep final rendered videos in git, ignore all other media caches/artifacts.
 media/*

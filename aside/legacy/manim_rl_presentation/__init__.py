@@ -1,2 +1,0 @@
-"""Manim RL presentation package."""
-
