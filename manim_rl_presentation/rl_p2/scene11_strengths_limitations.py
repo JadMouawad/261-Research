@@ -30,10 +30,10 @@ class Scene11StrengthsLimitations(P2BaseScene):
         self.wait(0.8)
 
         # Compact RL loop at top for recap context.
-        state = Text("State", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(LEFT * 3.3 + UP * 1.18)
-        action = Text("Action", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(LEFT * 0.9 + UP * 1.18)
-        reward = Text("Reward", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(RIGHT * 1.5 + UP * 1.18)
-        next_state = Text("Next state", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(RIGHT * 4.2 + UP * 1.18)
+        state = Text("State", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(LEFT * 3.3 + UP * 1.33)
+        action = Text("Action", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(LEFT * 0.9 + UP * 1.33)
+        reward = Text("Reward", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(RIGHT * 1.5 + UP * 1.33)
+        next_state = Text("Next state", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary).move_to(RIGHT * 4.2 + UP * 1.33)
 
         edge_1 = Arrow(state.get_right() + RIGHT * 0.08, action.get_left() + LEFT * 0.08, buff=0, stroke_width=3, color=PALETTE.text_muted)
         edge_2 = Arrow(action.get_right() + RIGHT * 0.08, reward.get_left() + LEFT * 0.08, buff=0, stroke_width=3, color=PALETTE.text_muted)
@@ -71,7 +71,7 @@ class Scene11StrengthsLimitations(P2BaseScene):
             "Reward design is sensitive",
             "Training can be unstable",
         ]
-        columns = ComparisonColumns("Strengths", strengths, "Limitations", limitations).shift(DOWN * 0.86)
+        columns = ComparisonColumns("Strengths", strengths, "Limitations", limitations).shift(DOWN * 0.71)
         left_col = columns[0][0]
         right_col = columns[0][1]
 
@@ -103,7 +103,7 @@ class Scene11StrengthsLimitations(P2BaseScene):
         recap_panel = RoundedRectangle(width=12.0, height=1.42, corner_radius=0.12)
         recap_panel.set_fill("#161B22", opacity=0.92).set_stroke(PALETTE.text_muted, width=1.1)
         recap_lines.move_to(recap_panel.get_center()).align_to(recap_panel, LEFT).shift(RIGHT * 0.25)
-        recap_group = VGroup(recap_panel, recap_lines).to_edge(DOWN, buff=0.04)
+        recap_group = VGroup(recap_panel, recap_lines).to_edge(DOWN, buff=0.19)
 
         self.play(FadeIn(recap_panel), run_time=0.6)
         self.play(LaggedStart(*[FadeIn(item) for item in recap_lines], lag_ratio=0.22), run_time=1.1)

@@ -44,7 +44,7 @@ class Scene08QUpdateProcess(P2BaseScene):
         improved = [(2, 0), (2, 1), (2, 2), (2, 3), (1, 3), (0, 3)]
         early_overlay = grid.flash_path(early, color=PALETTE.bad)
         improved_overlay = grid.flash_path(improved, color=PALETTE.goal)
-        status = Text("Before updates: more mistakes", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.bad)
+        status = Text("Before updates:\nmore mistakes", font_size=TYPOGRAPHY.small_size - 2, color=PALETTE.bad)
         status.next_to(grid, UP, buff=0.22)
 
         self.play(FadeIn(early_overlay), FadeIn(status), run_time=0.5)
@@ -53,7 +53,7 @@ class Scene08QUpdateProcess(P2BaseScene):
         self.wait(0.9)
         self.play(agent.animate.move_to(grid.cell_center(3, 0)), FadeOut(early_overlay), run_time=0.4)
 
-        improved_status = Text("After updates: shorter, safer path", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.goal).move_to(status)
+        improved_status = Text("After updates:\nbetter, safer path", font_size=TYPOGRAPHY.small_size - 2, color=PALETTE.goal).move_to(status)
         self.play(status.animate.become(improved_status), FadeIn(improved_overlay), run_time=0.45)
         self.play(grid.path_animation(improved, run_time_per_step=0.40))
         self.play(Indicate(goal_marker, color=PALETTE.goal), run_time=0.6)
@@ -70,22 +70,34 @@ class Scene08QUpdateProcess(P2BaseScene):
         hint = Text("new = old + correction", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
         hint.next_to(eq, DOWN, buff=0.24)
         self.play(FadeIn(eq_panel), FadeIn(eq), FadeIn(hint))
-        self.wait(2.0)
+        self.wait(3.8)
 
         # Conceptual term-by-term interpretation (speech-friendly pacing).
-        term_1 = Text("old estimate", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.text_muted).next_to(hint, DOWN, buff=0.16).align_to(eq_panel, LEFT)
-        term_2 = Text("observed reward", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.goal).next_to(term_1, DOWN, aligned_edge=LEFT, buff=0.08)
-        term_3 = Text("best future guess", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.accent).next_to(term_2, DOWN, aligned_edge=LEFT, buff=0.08)
-        term_4 = Text("small correction toward target", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.text_primary).next_to(term_3, DOWN, aligned_edge=LEFT, buff=0.08)
-        self.play(FadeIn(term_1), run_time=0.4)
-        self.play(FadeIn(term_2), run_time=0.4)
-        self.play(FadeIn(term_3), run_time=0.4)
-        self.play(FadeIn(term_4), run_time=0.5)
-        self.wait(2.5)
+        legend_title = Text("What each symbol means:", font_size=TYPOGRAPHY.small_size, color=PALETTE.accent)
+        term_font = TYPOGRAPHY.small_size - 3
+        term_1 = Text("Q(s,a): current score for action a at state s", font_size=term_font, color=PALETTE.text_muted)
+        term_2 = Text("r: immediate reward after the action", font_size=term_font, color=PALETTE.goal)
+        term_3 = Text("max Q(s',a'): best future score at next state", font_size=term_font, color=PALETTE.accent)
+        term_4 = Text("alpha: learning rate (update size)", font_size=term_font, color=PALETTE.text_primary)
+        term_5 = Text("gamma: discount factor (future weight)", font_size=term_font, color=PALETTE.text_primary)
+        term_group = VGroup(legend_title, term_1, term_2, term_3, term_4, term_5).arrange(DOWN, aligned_edge=LEFT, buff=0.11)
+        term_group.next_to(eq_panel, DOWN, buff=0.12).align_to(eq_panel, LEFT).shift(RIGHT * 0.12)
+        self.play(FadeIn(legend_title), run_time=0.55)
+        self.wait(1.05)
+        self.play(FadeIn(term_1), run_time=0.55)
+        self.wait(1.05)
+        self.play(FadeIn(term_2), run_time=0.55)
+        self.wait(1.05)
+        self.play(FadeIn(term_3), run_time=0.55)
+        self.wait(1.05)
+        self.play(FadeIn(term_4), run_time=0.55)
+        self.wait(1.05)
+        self.play(FadeIn(term_5), run_time=0.55)
+        self.wait(15.0)
 
         trans = Text("One step: (s, a, r, s')", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary)
         trans.next_to(eq_panel, DOWN, buff=0.32).align_to(eq_panel, LEFT).shift(RIGHT * 0.2)
-        self.play(FadeIn(trans), FadeOut(term_1), FadeOut(term_2), FadeOut(term_3), FadeOut(term_4))
+        self.play(FadeIn(trans), FadeOut(legend_title), FadeOut(term_1), FadeOut(term_2), FadeOut(term_3), FadeOut(term_4), FadeOut(term_5))
         self.wait(2.0)
 
         src_cell = grid.cells[(3, 0)].copy().set_fill(PALETTE.accent, opacity=0.22).set_stroke(PALETTE.accent, width=2)
@@ -128,9 +140,9 @@ class Scene08QUpdateProcess(P2BaseScene):
         self.wait(1.8)
 
         params = VGroup(
-            Text("alpha controls update size", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary),
-            Text("gamma controls future weight", font_size=TYPOGRAPHY.small_size, color=PALETTE.text_primary),
+            Text("alpha controls update size (learning rate)", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.text_primary),
+            Text("gamma controls future weight (discount)", font_size=TYPOGRAPHY.small_size - 1, color=PALETTE.text_primary),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
         params.next_to(after, DOWN, aligned_edge=LEFT, buff=0.12)
         self.play(FadeIn(params))
-        self.wait(10.0)
+        self.wait(12.0)

@@ -125,7 +125,7 @@ class Scene10WarehouseApplication(P2BaseScene):
         self.play(
             AnimationGroup(
                 *[MoveAlongPath(robot_agent, seg, run_time=0.35) for seg in robot_path],
-                lag_ratio=0,
+                lag_ratio=1,
             )
         )
         robot_status = Text("Finds safer,\nshorter paths", font_size=TYPOGRAPHY.small_size - 5, color=PALETTE.goal)
@@ -135,7 +135,7 @@ class Scene10WarehouseApplication(P2BaseScene):
         self.play(
             AnimationGroup(
                 *[MoveAlongPath(robot_agent, seg, run_time=0.25) for seg in robot_path],
-                lag_ratio=0,
+                lag_ratio=1,
             )
         )
         self.wait(2.5)

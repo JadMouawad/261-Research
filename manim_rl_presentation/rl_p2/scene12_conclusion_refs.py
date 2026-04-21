@@ -75,7 +75,6 @@ class Scene12ConclusionReferences(P2BaseScene):
         self.play(FadeIn(takeaway_panel), run_time=0.55)
         self.play(LaggedStart(*[FadeIn(line) for line in takeaway_lines], lag_ratio=0.2), run_time=1.2)
         self.wait(7.0)
-        self.play(FadeOut(takeaway), run_time=0.5)
 
         refs = ReferenceList(
             [
@@ -98,7 +97,7 @@ class Scene12ConclusionReferences(P2BaseScene):
         self.wait(9.0)
 
         closing = Text("Thank you.", font_size=TYPOGRAPHY.subtitle_size, color=PALETTE.accent, weight="BOLD").to_edge(DOWN, buff=0.25)
-        self.play(FadeOut(refs), FadeOut(cards), FadeOut(recap_title), run_time=0.5)
+        self.play(FadeOut(refs), FadeOut(takeaway), FadeOut(cards), FadeOut(recap_title), run_time=0.5)
         self.play(FadeIn(closing), run_time=0.5)
         self.wait(2.5)
         self.play(FadeOut(closing), run_time=0.4)
